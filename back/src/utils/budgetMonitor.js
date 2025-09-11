@@ -47,8 +47,28 @@ async function checkBudget(userId, month, year) {
       }
     });
 
+    const totalExpense = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+    if (totalExpenses > totalIncome) {
+      return {
+        exceeded: true,
+        amount: totalExpenses - totalIncome,
+        totalIncome,
+        totalExpenses
+      };
+    }
+    
+    return {
+      exceeded: false,
+      amount: 0,
+      totalIncome,
+      totalExpenses
+    };
+
 }catch (error) {
     console.error('Budget check error:', error);
     throw error;
   }
 }
+
+module.exports = { checkBudget };
