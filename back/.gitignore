@@ -3,3 +3,4 @@ script.js
 database.sql
 insert.sql
 uploads
+node_modules/
