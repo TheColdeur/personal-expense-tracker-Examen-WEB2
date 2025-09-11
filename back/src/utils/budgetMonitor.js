@@ -1,0 +1,25 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+async function checkBudget(userId, month, year) {
+  try {
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0, 23, 59, 59);
+    
+    const incomes = await prisma.income.findMany({
+      where: {
+        userId,
+        date: {
+          gte: startDate,
+          lte: endDate
+        }
+      }
+    });
+
+    const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
+
+}catch (error) {
+    console.error('Budget check error:', error);
+    throw error;
+  }
+}
