@@ -18,6 +18,35 @@ async function checkBudget(userId, month, year) {
 
     const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
 
+
+    const expenses = await prisma.expense.findMany({
+      where: {
+        userId,
+        OR: [
+          {
+            type: 'one-time',
+            date: {
+              gte: startDate,
+              lte: endDate
+            }
+          },
+          {
+            type: 'recurring',
+            OR: [
+              {
+                startDate: { lte: endDate },
+                endDate: { gte: startDate }
+              },
+              {
+                startDate: { lte: endDate },
+                endDate: null
+              }
+            ]
+          }
+        ]
+      }
+    });
+
 }catch (error) {
     console.error('Budget check error:', error);
     throw error;
