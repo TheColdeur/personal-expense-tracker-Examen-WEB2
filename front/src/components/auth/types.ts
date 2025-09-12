@@ -12,3 +12,21 @@ export interface AuthContextType {
   logout: () => void;
   isLoading: boolean;
 }
+
+export interface AuthResponse {
+  message: string;
+  token: string;
+  user: User;
+}
+
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
+export interface SignupData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+}
