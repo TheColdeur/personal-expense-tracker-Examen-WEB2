@@ -47,7 +47,6 @@ const Navbar = () => {
           </span>
         </button>
 
-        {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
           aria-label="Toggle Theme"
@@ -60,7 +59,6 @@ const Navbar = () => {
           )}
         </button>
 
-        {/* Profile */}
         <Link
           to="/profile"
           className="flex items-center gap-2 group p-3 rounded-2xl hover:bg-black hover:text-yellow-400 transition"
