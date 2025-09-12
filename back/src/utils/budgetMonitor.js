@@ -1,4 +1,4 @@
-const db = require('../config/db');
+import { pool } from "../config/db.js";
 
 async function checkBudget(userId, month, year) {
   try {
@@ -7,7 +7,7 @@ async function checkBudget(userId, month, year) {
     const startDateStr = startDate.toISOString().split('T')[0];
     const endDateStr = endDate.toISOString().split('T')[0];
     
-    const incomeResult = await db.query(
+    const incomeResult = await pool.query(
       `SELECT COALESCE(SUM(amount), 0) as total_income 
        FROM incomes 
        WHERE "usersId" = $1 AND date BETWEEN $2 AND $3`,
@@ -16,7 +16,7 @@ async function checkBudget(userId, month, year) {
     
     const totalIncome = parseFloat(incomeResult.rows[0].total_income);
     
-    const expenseResult = await db.query(
+    const expenseResult = await pool.query(
       `SELECT COALESCE(SUM(amount), 0) as total_expenses
        FROM expenses 
        WHERE "userId" = $1 AND (
@@ -52,4 +52,4 @@ async function checkBudget(userId, month, year) {
   }
 }
 
-module.exports = { checkBudget };
+export { checkBudget };
