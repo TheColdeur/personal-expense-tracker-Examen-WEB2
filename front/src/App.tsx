@@ -3,6 +3,7 @@ import Navbar from './components/layout/NavBar';
 import Sidebar from './components/layout/SideBar';
 import Dashboard from './components/dashboard/DashBoard';
 import ExpensesPage from './components/expenses/ExpensesPages';
+import PieChart from './components/dashboard/PieChart';
 import ExpensesFormPage from './components/expenses/ExpenseFormPage';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/expenses" element={<ExpensesPage />} />
           <Route path="/ajouter" element={<ExpensesFormPage />} />
+          <Route path="/piechart" element={<PieChart />} />
         </Routes>
       </div>
     </>
