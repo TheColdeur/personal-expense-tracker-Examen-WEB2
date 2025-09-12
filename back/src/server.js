@@ -1,49 +1,46 @@
-import express, { json } from "express";
-import cors from "cors";
-import dotenv from 'dotenv';
-import authRoutes from "./routes/authRoutes.js";
-import categoryRoutes from "./routes/categoryRoutes.js";
-import receiptRoutes from "./routes/receiptRoutes.js";
-import revenueRoutes from "./routes/incomeRoutes.js";
-import revenueReceiptRoutes from "./routes/incomeReceiptRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
+// server.js
 
-const express = require('express');
-const cors = require('cors');
-const multer = require('multer');
-const { Pool } = require('pg');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import multer from 'multer';
+import { Pool } from 'pg';
+
+import authRoutes from './routes/authRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import receiptRoutes from './routes/receiptRoutes.js';
+import revenueRoutes from './routes/incomeRoutes.js';
+import revenueReceiptRoutes from './routes/incomeReceiptRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
-// Connexion PostgreSQL
+// 🔧 PostgreSQL connection
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'cashflow',
-  password: 'Novah Anusha', // ← adapte si besoin
+  password: 'Novah Anusha', // ← à sécuriser via .env
   port: 5432,
 });
 
+// 🔧 Express setup
 const app = express();
-// const PORT = process.env.PORT;
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 const upload = multer({ dest: 'uploads/' });
 
-
 app.use(cors());
-app.use(json());
+app.use(express.json()); // ← pas besoin d'importer `json` séparément
 
-app.use("/api/auth", authRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/receipts", receiptRoutes);
-app.use("/api/revenues", revenueRoutes);
-app.use("/api/revenue-receipts", revenueReceiptRoutes);
-app.use("/api/user", userRoutes);
-
-// Routes catégories (GET, POST, PUT, DELETE)
+// 🔗 Route bindings
+app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/receipts', receiptRoutes);
+app.use('/api/revenues', revenueRoutes);
+app.use('/api/revenue-receipts', revenueReceiptRoutes);
+app.use('/api/user', userRoutes);
 
-// Route GET dépenses
+// 🔍 GET expenses
 app.get('/api/expenses', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM expenses ORDER BY created_at DESC');
@@ -54,7 +51,7 @@ app.get('/api/expenses', async (req, res) => {
   }
 });
 
-// Route POST dépense
+// 📝 POST expense
 app.post('/api/expenses', upload.single('receipt'), async (req, res) => {
   try {
     const {
@@ -95,6 +92,7 @@ app.post('/api/expenses', upload.single('receipt'), async (req, res) => {
   }
 });
 
+// 🗑️ DELETE expense
 app.delete('/api/expenses/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -106,6 +104,7 @@ app.delete('/api/expenses/:id', async (req, res) => {
   }
 });
 
+// 🚀 Start server
 app.listen(PORT, () => {
-    console.log(`Server started at : http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
