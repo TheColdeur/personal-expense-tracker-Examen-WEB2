@@ -56,7 +56,7 @@ export const signup = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).send("Internal server error");
+        res.status(500).json({message: "Internal server error"});
     }
 } 
 // Log in into account
@@ -97,7 +97,7 @@ export const login = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).send("Internal server error");
+        res.status(500).json({message: "Internal server error"});
     }
 }
 // Log out
@@ -106,7 +106,7 @@ export const logout = async (req, res) => {
         res.json({ message: "Logout successfully" });
     } catch (err) {
         console.error(err);
-        return res.status(500).send("Internal server error");
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 // Get user info
@@ -118,6 +118,6 @@ export const userInfo = async (req, res) => {
         res.status(200).json({ user: user.rows[0] });
     } catch (err) {
         console.error(err);
-        return res.status(500).send("Internal server error");
+        return res.status(500).json({message: "Internal server error"});
     }
 }

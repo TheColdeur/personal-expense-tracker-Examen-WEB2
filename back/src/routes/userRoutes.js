@@ -16,8 +16,6 @@ router.put("/profile", authentication, updateUserProfile);
 
 router.put("/change-password", authentication, changePassword);
 
-router.put("/dark-mode", authentication, toggleDarkMode);
-
 router.delete("/account", authentication, deleteUserAccount);
 
 export default router;
