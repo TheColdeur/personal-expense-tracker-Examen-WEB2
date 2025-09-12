@@ -9,6 +9,7 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import type { TooltipItem } from 'chart.js';
+import { Link } from 'react-router-dom';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -16,7 +17,6 @@ type Expense = {
   id: number;
   amount: number;
   category_id: number;
-  date: string;
 };
 
 type Category = {
@@ -38,7 +38,6 @@ export default function PieChart() {
       .catch(err => console.error('Erreur chargement catégories :', err));
   }, []);
 
-  // 🔁 Regrouper les montants par nom de catégorie
   const categoryTotals: Record<string, number> = {};
   expenses.forEach(e => {
     const name = categories.find(cat => cat.id === e.category_id)?.name || 'Sans catégorie';
@@ -55,33 +54,40 @@ export default function PieChart() {
       {
         data: values,
         backgroundColor: [
-          '#facc15', '#60a5fa', '#34d399', '#f472b6', '#a78bfa',
-          '#fb923c', '#4ade80', '#c084fc', '#f87171', '#22d3ee',
+          'rgba(250, 204, 21, 0.8)',
+          'rgba(96, 165, 250, 0.8)',
+          'rgba(52, 211, 153, 0.8)',
+          'rgba(236, 72, 153, 0.8)',
+          'rgba(167, 139, 250, 0.8)',
         ],
         borderColor: '#fff',
         borderWidth: 2,
+        borderRadius: 10, // ✅ bords arrondis
       },
     ],
   };
 
   const options = {
     responsive: true,
+    cutout: '70%', // ✅ centre vide
     plugins: {
       legend: {
-        position: 'right' as const,
+        position: 'bottom' as const,
         labels: {
           color: '#000',
-          font: { family: 'Poppins', size: 14 },
-          boxWidth: 20,
+          font: { family: 'Poppins', size: 13 },
+          padding: 20,
         },
       },
       datalabels: {
         color: '#000',
-        formatter: (value: number) => `${((value / total) * 100).toFixed(1)}%`,
         font: {
-          weight: 'bold' as const,
-          size: 12,
+          weight: 'lighter' as const,
+          size: 11,
         },
+        padding: 6,
+        borderRadius: 4,
+        backgroundColor: 'rgba(255,255,255,0.7)',
       },
       tooltip: {
         callbacks: {
@@ -96,45 +102,53 @@ export default function PieChart() {
   };
 
   return (
-  <div className="relative max-w-6xl mx-auto mt-20 px-4 md:px-8">
-  {/* Fond décoratif */}
-  <div className="absolute inset-0 -z-10 opacity-10 pointer-events-none">
-    <svg viewBox="0 0 200 200" className="w-full h-full animate-pulse" preserveAspectRatio="xMidYMid slice">
-      <path fill="#facc15" d="M43.4,-67.3C56.6,-58.6,67.3,-47.2,72.1,-33.9C76.9,-20.6,75.9,-5.3,72.5,9.9C69.1,25.1,63.3,40.2,52.3,50.9C41.3,61.6,25.1,67.9,8.2,66.7C-8.7,65.5,-17.4,56.9,-29.3,50.1C-41.2,43.3,-56.2,38.3,-63.9,28.1C-71.6,17.9,-72.1,2.6,-69.3,-12.3C-66.5,-27.2,-60.4,-41.7,-49.8,-51.7C-39.2,-61.7,-24.1,-67.2,-8.1,-61.9C7.9,-56.6,15.8,-40.5,43.4,-67.3Z" transform="translate(100 100)" />
-    </svg>
-  </div>
-
-  {/* Titre */}
-  <div className="text-center mb-10">
-    <h1 className="text-4xl md:text-5xl font-bold text-yellow-500 dark:text-yellow-400 tracking-tight">
-      🥧 Répartition des dépenses
-    </h1>
-    <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm md:text-base">
-      Visualisez comment vos dépenses sont réparties selon les catégories enregistrées.
-    </p>
+    <div className="max-w-6xl mx-auto mt-0 px-4 md:px-8">
+  {/* Header */}
+  <div className="flex flex-col md:flex-row items-center justify-between mb-10">
+    <div>
+      <h1 className="text-4xl font-bold text-yellow-500 dark:text-yellow-400 tracking-tight">
+        📊 Analyse des dépenses
+      </h1>
+      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+        Visualisez la répartition de vos dépenses par catégorie pour mieux comprendre vos habitudes.
+      </p>
+    </div>
+    <Link
+      to="/dashboard"
+      className="mt-4 md:mt-0 bg-black text-white px-5 py-2 rounded-full hover:bg-gray-900 hover:text-yellow-400 transition-all duration-300 shadow-md"
+    >
+      ← Retour au tableau de bord
+    </Link>
   </div>
 
   {/* Résumé */}
   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
     <SummaryCard label="Total des dépenses" value={`${total.toLocaleString('fr-FR')} Ar`} />
-    <SummaryCard label="Catégories utilisées" value={labels.length.toString()} />
+    <SummaryCard label="Transactions" value={expenses.length.toString()} />
     <SummaryCard label="Catégorie dominante" value={labels[values.indexOf(Math.max(...values))] || '—'} />
-    <SummaryCard label="Dernière mise à jour" value={new Date().toLocaleDateString('fr-FR')} />
+    <SummaryCard label="Mis à jour le" value={new Date().toLocaleDateString('fr-FR')} />
   </div>
 
-  {/* Graphique */}
-  <div className="bg-white dark:bg-black p-6 rounded-xl shadow-lg border border-yellow-300">
-    <div className="max-w-md mx-auto">
+  {/* Donut Chart */}
+  <div className="bg-gradient-to-br from-white via-yellow-50 to-white dark:from-black dark:via-yellow-950 dark:to-black p-6 rounded-3xl shadow-xl border border-yellow-200 dark:border-yellow-500 transition-all duration-300">
+    <div className="relative max-w-sm mx-auto">
       <Pie data={data} options={options} />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="text-lg font-bold text-gray-700 dark:text-yellow-400">
+          {total.toLocaleString('fr-FR')} Ar
+        </div>
+      </div>
     </div>
   </div>
 
   {/* Légende */}
-  <div className="mt-8 text-sm text-gray-600 dark:text-gray-400 text-center">
-    Chaque segment représente une catégorie. Passez la souris pour voir les montants exacts.
+  <div className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
+    Chaque segment représente une catégorie. Survolez pour voir les détails.
   </div>
 </div>
-);
+
+  );
+
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-white dark:bg-black p-4 rounded-xl shadow border border-yellow-300 hover:shadow-md transition-all duration-300">
@@ -143,6 +157,5 @@ function SummaryCard({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
 
 }
