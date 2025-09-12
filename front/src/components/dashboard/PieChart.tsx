@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
-import type { TooltipItem } from 'chart.js';
-
 import {
   Chart as ChartJS,
   ArcElement,
@@ -10,29 +8,42 @@ import {
   Legend,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import type { TooltipItem } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 type Expense = {
   id: number;
   amount: number;
-  category: string;
+  category_id: number;
+  date: string;
+};
+
+type Category = {
+  id: number;
+  name: string;
 };
 
 export default function PieChart() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     axios.get('http://localhost:4000/api/expenses')
       .then(res => setExpenses(res.data))
       .catch(err => console.error('Erreur chargement dépenses :', err));
+
+    axios.get('http://localhost:4000/api/categories')
+      .then(res => setCategories(res.data))
+      .catch(err => console.error('Erreur chargement catégories :', err));
   }, []);
 
-  const categoryTotals = expenses.reduce((acc, e) => {
-    const cat = e.category || 'Sans catégorie';
-    acc[cat] = (acc[cat] || 0) + Number(e.amount);
-    return acc;
-  }, {} as Record<string, number>);
+  // 🔁 Regrouper les montants par nom de catégorie
+  const categoryTotals: Record<string, number> = {};
+  expenses.forEach(e => {
+    const name = categories.find(cat => cat.id === e.category_id)?.name || 'Sans catégorie';
+    categoryTotals[name] = (categoryTotals[name] || 0) + Number(e.amount);
+  });
 
   const labels = Object.keys(categoryTotals);
   const values = Object.values(categoryTotals);
@@ -68,9 +79,9 @@ export default function PieChart() {
         color: '#000',
         formatter: (value: number) => `${((value / total) * 100).toFixed(1)}%`,
         font: {
-            weight: 'bold' as const, // ou 'bolder', 'lighter', ou même un nombre comme 400
-            size: 12
-            },
+          weight: 'bold' as const,
+          size: 12,
+        },
       },
       tooltip: {
         callbacks: {
@@ -78,7 +89,7 @@ export default function PieChart() {
             const label = ctx.label || '';
             const value = ctx.raw as number;
             return `${label}: ${value.toLocaleString('fr-FR')} Ar`;
-            },
+          },
         },
       },
     },
