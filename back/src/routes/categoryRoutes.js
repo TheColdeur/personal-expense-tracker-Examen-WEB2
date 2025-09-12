@@ -1,6 +1,9 @@
-const express = require('express');
+// routes/categoryRoutes.js
+
+import express from 'express';
+import { Pool } from 'pg';
+
 const router = express.Router();
-const { Pool } = require('pg');
 
 const pool = new Pool({
   user: 'postgres',
@@ -25,7 +28,10 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { name } = req.body;
-    const result = await pool.query('INSERT INTO categories (name) VALUES ($1) RETURNING *', [name]);
+    const result = await pool.query(
+      'INSERT INTO categories (name) VALUES ($1) RETURNING *',
+      [name]
+    );
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error('Erreur POST /categories:', err);
@@ -38,7 +44,10 @@ router.put('/:id', async (req, res) => {
   try {
     const { name } = req.body;
     const { id } = req.params;
-    const result = await pool.query('UPDATE categories SET name = $1 WHERE id = $2 RETURNING *', [name, id]);
+    const result = await pool.query(
+      'UPDATE categories SET name = $1 WHERE id = $2 RETURNING *',
+      [name, id]
+    );
     res.json(result.rows[0]);
   } catch (err) {
     console.error('Erreur PUT /categories/:id', err);
@@ -58,4 +67,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
