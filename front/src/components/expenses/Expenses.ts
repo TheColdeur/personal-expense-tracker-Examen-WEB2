@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { ExpenseCreate } from './types';
-const API_URL = 'http://localhost:8000/api/expenses';
+const API_URL = 'http://localhost:4000/api/expenses';
 
 export const getExpenses = () => axios.get(API_URL);
 export const createExpense = (data: ExpenseCreate) => axios.post(API_URL, data);

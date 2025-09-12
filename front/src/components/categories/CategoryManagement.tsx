@@ -26,25 +26,25 @@ export default function CategoryManager({ onClose }: Props) {
 };
 
   useEffect(() => {
-    axios.get<Category[]>('http://localhost:8000/api/categories')
+    axios.get<Category[]>('http://localhost:4000/api/categories')
       .then(res => setCategories(res.data));
   }, []);
 
   const refresh = async () => {
-    const res = await axios.get<Category[]>('http://localhost:8000/api/categories');
+    const res = await axios.get<Category[]>('http://localhost:4000/api/categories');
     setCategories(res.data);
   };
 
   const handleAdd = async () => {
     if (!newName.trim()) return;
-    await axios.post('http://localhost:8000/api/categories', { name: newName });
+    await axios.post('http://localhost:4000/api/categories', { name: newName });
     setNewName('');
     refresh();
   };
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8000/api/categories/${id}`);
+      await axios.delete(`http://localhost:4000/api/categories/${id}`);
       refresh();
     } catch (err) {
       console.error('Erreur suppression catégorie:', err);
@@ -54,7 +54,7 @@ export default function CategoryManager({ onClose }: Props) {
 
   const handleEdit = async () => {
     if (!editingName.trim() || editingId === null) return;
-    await axios.put(`http://localhost:8000/api/categories/${editingId}`, { name: editingName });
+    await axios.put(`http://localhost:4000/api/categories/${editingId}`, { name: editingName });
     setEditingId(null);
     setEditingName('');
     refresh();

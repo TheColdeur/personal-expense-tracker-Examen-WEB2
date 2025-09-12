@@ -9,7 +9,7 @@ export default function ExpensesPage() {
 
   const loadExpenses = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/expenses');
+      const response = await axios.get('http://localhost:4000/api/expenses');
       setExpenses(response.data);
     } catch (error) {
       console.error('Erreur chargement :', error);
@@ -34,7 +34,7 @@ export default function ExpensesPage() {
   const handleDelete = async (id: number) => {
     setDeletingId(id);
     try {
-      await axios.delete(`http://localhost:8000/api/expenses/${id}`);
+      await axios.delete(`http://localhost:4000/api/expenses/${id}`);
       await loadExpenses();
     } catch (error) {
       console.error('Erreur suppression :', error);

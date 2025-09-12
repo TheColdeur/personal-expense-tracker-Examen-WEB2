@@ -116,7 +116,7 @@ export default function ExpenseForm({ onAdd }: ExpenseFormProps) {
         if (form.end_date) formData.append('end_date', form.end_date);
       }
 
-      const res = await axios.post('http://localhost:8000/api/expenses', formData);
+      const res = await axios.post('http://localhost:4000/api/expenses', formData);
       onAdd(res.data);
       handleReset();
       setShowCheck(true);
@@ -136,7 +136,7 @@ export default function ExpenseForm({ onAdd }: ExpenseFormProps) {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/categories');
+      const res = await fetch('http://localhost:4000/api/categories');
       const data = await res.json();
       setCategories(data);
     } catch (err) {
