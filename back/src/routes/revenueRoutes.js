@@ -1,12 +1,12 @@
 import express from "express";
 import { authentication } from "../middlewares/authentication.js";
 import { 
-    createRevenue, 
-    deleteRevenue, 
-    getRevenues, 
-    getRevenueById, 
+    createRevenue,
+    deleteRevenue,
+    getRevenues,
+    getRevenueById,
     updateRevenue,
-    getRevenueStats 
+    getRevenueStats
 } from "../controllers/revenueController.js";
 
 const router = express.Router();
