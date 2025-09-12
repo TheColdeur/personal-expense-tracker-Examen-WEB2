@@ -63,8 +63,8 @@ const Signup = () => {
             </div>
         )}
         <div className='relative flex flex-col justify-center items-center gap-2'>
-            <h3 className='text-4xl font-bold text-amber-400'>Sign up</h3>
-            <div className='bg-amber-400 w-1/2 h-1.5 border border-solid border-amber-400 rounded-2xl'></div>
+            <h3 className='text-4xl font-bold text-yellow-400'>Sign up</h3>
+            <div className='bg-yellow-400 w-1/2 h-1.5 border border-solid border-yellow-400 rounded-2xl'></div>
         </div>
         <form 
         onSubmit={handleSubmit}
@@ -72,54 +72,54 @@ const Signup = () => {
             
             <div className='flex flex-col w-full gap-2'>
                 <div className='flex flex-col w-full'>
-                    <label htmlFor="username" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faUser} className='mr-1 text-amber-400'/>Username</label>
+                    <label htmlFor="username" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faUser} className='mr-1 text-yellow-400'/>Username</label>
                     <input 
                     type="text" 
                     placeholder='username' 
                     id="username" 
                     value={signupData.username}
                     onChange={handleChange}
-                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-amber-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
+                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-yellow-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
                 </div>
                 <div className='flex flex-col w-full'>
-                    <label htmlFor="email" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faEnvelope} className='mr-1 text-amber-400'/>Email</label>
+                    <label htmlFor="email" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faEnvelope} className='mr-1 text-yellow-400'/>Email</label>
                     <input 
                     type="text" 
                     placeholder='Email' 
                     id="email" 
                     value={signupData.email}
                     onChange={handleChange}
-                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-amber-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
+                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-yellow-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
                 </div>
                 <div className='flex flex-col w-full'>
-                    <label htmlFor="password" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faKey} className='mr-1 text-amber-400' />Password</label>
+                    <label htmlFor="password" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faKey} className='mr-1 text-yellow-400' />Password</label>
                     <input 
                     type="password" 
                     placeholder='Password' 
                     id='password' 
                     value={signupData.password}
                     onChange={handleChange}
-                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-amber-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
+                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-yellow-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
                 </div>
                 <div className='flex flex-col w-full'>
-                    <label htmlFor="password" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faKey} className='mr-1 text-amber-400' />Confirm Password</label>
+                    <label htmlFor="password" className='font-medium pb-2 text-sm'><FontAwesomeIcon icon={faKey} className='mr-1 text-yellow-400' />Confirm Password</label>
                     <input 
                     type="password" 
                     placeholder='Password' 
                     id='confirmPassword' 
                     value={signupData.confirmPassword}
                     onChange={handleChange}
-                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-amber-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
+                    className='w-full py-2.5 px-4 outline-gray-400 outline-solid outline transition-all duration-100 focus:outline-yellow-400 focus:outline-2 rounded-lg bg-gray-100 placeholder:text-gray-400 placeholder:text-sm' />
                 </div>
             </div>
             <div className='w-full flex flex-col items-center justify-center'>
                 <Link 
                 to="/login" 
-                className='text-amber-500 underline cursor-pointer transition-all duration-300 hover:text-amber-400 mb-4 text-sm'
+                className='text-yellow-500 underline cursor-pointer transition-all duration-300 hover:text-yellow-400 mb-4 text-sm'
                 >Already have an account? Login here</Link>
                 <button 
                 type='submit'
-                className='w-full py-3 border-2 border-solid border-black text-amber-400 bg-black rounded-4xl transition-all duration-300 hover:text-black hover:bg-white cursor-pointer font-medium'>
+                className='w-full py-3 border-2 border-solid border-black text-white bg-black rounded-3xl transition-all duration-300 hover:text-yellow-400 hover:shadow-yellow-500/50 shadow-md cursor-pointer font-medium'>
                     {loading ? 'Loading...': 'Sign up'}
                 </button>
             </div>
