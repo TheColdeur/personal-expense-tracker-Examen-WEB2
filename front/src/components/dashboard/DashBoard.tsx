@@ -38,17 +38,17 @@ export default function Dashboard() {
     .reduce((sum, e) => sum + Number(e.amount), 0);
 
   return (
-    <div className="relative min-h-screen bg-white px-6 py-10 overflow-hidden z-10">
+    <div className="relative min-h-screen bg-white px-4 md:px-6 pt-[0px] pb-10 overflow-hidden z-10">
       {/* Fond SVG animé */}
       <div className="absolute inset-0 -z-10 opacity-50 pointer-events-none">
-        <svg viewBox="0 0 200 200" className="w-full h-full animate-pulse transition-transform duration-700 ease-in-out" preserveAspectRatio="xMidYMid slice" id="svgFond">
+        <svg viewBox="0 0 200 200" className="w-full h-full animate-pulse transition-transform duration-700 ease-in-out" preserveAspectRatio="xMidYMid slice">
           <path fill="#facc15" d="M43.4,-67.3C56.6,-58.6,67.3,-47.2,72.1,-33.9C76.9,-20.6,75.9,-5.3,72.5,9.9C69.1,25.1,63.3,40.2,52.3,50.9C41.3,61.6,25.1,67.9,8.2,66.7C-8.7,65.5,-17.4,56.9,-29.3,50.1C-41.2,43.3,-56.2,38.3,-63.9,28.1C-71.6,17.9,-72.1,2.6,-69.3,-12.3C-66.5,-27.2,-60.4,-41.7,-49.8,-51.7C-39.2,-61.7,-24.1,-67.2,-8.1,-61.9C7.9,-56.6,15.8,-40.5,43.4,-67.3Z" transform="translate(100 100)" />
         </svg>
       </div>
 
       {/* Header */}
       <div className="mb-10 text-center animate-fade-in-up">
-        <h1 className="text-6xl text-yellow-500 font-semibold tracking-tight">Tableau de bord</h1>
+        <h1 className="text-5xl md:text-6xl text-yellow-500 font-semibold tracking-tight">Tableau de bord</h1>
         <p className="text-gray-600 mt-2">Suivi clair de vos dépenses et catégories</p>
       </div>
 
@@ -59,8 +59,7 @@ export default function Dashboard() {
         <StatCard icon="📦" label="Dépenses" value={filtered.length.toString()} />
         <StatCard icon="⚖️" label="Moyenne" value={`${average.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} Ar`} />
       </div>
-
-      {/* Filtres + Boutons */}
+            {/* Filtres + Boutons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-8 animate-fade-in-up">
         <div className="bg-white rounded-xl shadow-md p-6 border border-yellow-300">
           <h2 className="text-xl font-bold text-black mb-4">🔍 Filtres</h2>
@@ -90,7 +89,8 @@ export default function Dashboard() {
             </p>
           )}
         </div>
-                {/* Boutons */}
+
+        {/* Boutons */}
         <div className="flex flex-col md:flex-row gap-4 justify-end items-start md:items-center">
           <Link
             to="/piechart"
