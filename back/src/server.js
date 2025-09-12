@@ -2,7 +2,6 @@ import express, { json } from "express";
 import cors from "cors";
 import dotenv from 'dotenv';
 import authRoutes from "./routes/authRoutes.js";
-import categoryRoutes from "./routes/categoryRoutes.js";
 import receiptRoutes from "./routes/receiptRoutes.js";
 import revenueRoutes from "./routes/incomeRoutes.js";
 import revenueReceiptRoutes from "./routes/incomeReceiptRoutes.js";
@@ -19,7 +18,6 @@ app.use(cors());
 app.use(json());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/categories", categoryRoutes);
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/revenues", revenueRoutes);
 app.use("/api/revenue-receipts", revenueReceiptRoutes);
