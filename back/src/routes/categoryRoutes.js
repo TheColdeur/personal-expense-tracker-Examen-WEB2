@@ -1,12 +1,61 @@
-import express from "express";
-import { authentication } from "../middlewares/authentication.js";
-import { createCategory, deleteCategory, getCategories, updateCategory } from "../controllers/categoryController.js";
-
+const express = require('express');
 const router = express.Router();
+const { Pool } = require('pg');
 
-router.get("/",authentication, getCategories);
-router.post("/", authentication, createCategory);
-router.put("/:id", authentication, updateCategory);
-router.delete("/:id", authentication, deleteCategory);
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'cashflow',
+  password: 'Novah Anusha',
+  port: 5432,
+});
 
-export default router;
+// GET all categories
+router.get('/', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM categories ORDER BY name');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Erreur GET /categories:', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// POST new category
+router.post('/', async (req, res) => {
+  try {
+    const { name } = req.body;
+    const result = await pool.query('INSERT INTO categories (name) VALUES ($1) RETURNING *', [name]);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Erreur POST /categories:', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// PUT update category
+router.put('/:id', async (req, res) => {
+  try {
+    const { name } = req.body;
+    const { id } = req.params;
+    const result = await pool.query('UPDATE categories SET name = $1 WHERE id = $2 RETURNING *', [name, id]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Erreur PUT /categories/:id', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// DELETE category
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM categories WHERE id = $1', [id]);
+    res.status(204).send();
+  } catch (err) {
+    console.error('Erreur DELETE /categories/:id', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+module.exports = router;

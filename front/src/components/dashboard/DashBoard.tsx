@@ -38,7 +38,7 @@ export default function Dashboard() {
     .reduce((sum, e) => sum + Number(e.amount), 0);
 
   return (
-    <div className="relative min-h-screen bg-gray-50 px-6 py-10 overflow-hidden z-10">
+    <div className="relative min-h-screen bg-white px-6 py-10 overflow-hidden z-10">
       {/* Fond SVG animé */}
       <div className="absolute inset-0 -z-10 opacity-50 pointer-events-none">
         <svg viewBox="0 0 200 200" className="w-full h-full animate-pulse transition-transform duration-700 ease-in-out" preserveAspectRatio="xMidYMid slice" id="svgFond">

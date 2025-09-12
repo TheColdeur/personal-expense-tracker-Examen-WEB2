@@ -7,7 +7,7 @@ export default function ExpensesFormPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative min-h-screen bg-gray-50 px-6 py-10 flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen bg-white px-6 py-10 flex items-center justify-center overflow-hidden">
       {/* Fond SVG animé */}
       <div className="absolute inset-0 -z-10 opacity-10 pointer-events-none">
         <svg viewBox="0 0 200 200" className="w-full h-full animate-pulse">
