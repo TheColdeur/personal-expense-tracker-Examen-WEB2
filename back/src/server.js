@@ -4,8 +4,8 @@ import dotenv from 'dotenv'
 import authRoutes from "./routes/authRoutes.js"
 import categoryRoutes from "./routes/categoryRoutes.js"
 import receiptRoutes from "./routes/receiptRoutes.js"
-import revenueRoutes from "./routes/revenueRoutes.js"
-import revenueReceiptRoutes from "./routes/revenueReceiptRoutes.js"
+import revenueRoutes from "./routes/revenuRoutes.js"
+import revenueReceiptRoutes from "./routes/revenuReceiptRoute.js"
 
 dotenv.config()
 
