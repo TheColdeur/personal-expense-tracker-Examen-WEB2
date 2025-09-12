@@ -25,7 +25,10 @@ export default function Dashboard() {
   }, []);
 
   const filtered = expenses.filter(e => {
-    const matchCategory = categoryFilter ? e.category === categoryFilter : true;
+    const matchCategory = categoryFilter
+  ? categories.find(cat => cat.id === e.category_id)?.name === categoryFilter
+  : true;
+
     const matchDate = dateFilter ? e.date.startsWith(dateFilter) : true;
     return matchCategory && matchDate;
   });
@@ -118,7 +121,7 @@ export default function Dashboard() {
                 <p className="text-xs text-gray-400 mt-1">📅 {new Date(e.date).toLocaleDateString('fr-FR')}</p>
               </div>
               <span className="px-3 py-1 bg-yellow-100 text-yellow-600 text-xs font-bold rounded-full shadow-sm">
-                {e.category || 'Sans catégorie'}
+                {categories.find(cat => cat.id === e.category_id)?.name || 'Sans catégorie'}
               </span>
             </div>
           </div>

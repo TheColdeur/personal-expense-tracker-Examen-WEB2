@@ -8,6 +8,7 @@ export const updateExpense = (id: number, data: ExpenseCreate) => axios.put(`${A
 export const deleteExpense = (id: number) => axios.delete(`${API_URL}/${id}`);
 
 export interface Expense {
+  category_id: number;
   id: number;
   title: string;
   amount: number;
