@@ -29,13 +29,13 @@ export const signup = async (req, res) => {
         const { username, email, password } = req.body;
 
         if(!username || !email || !password){
-            return res.status(204).send("Email and password are required");
+            return res.status(400).json({message: "Email and password are required"});
         }
 
         const exist = await findUserByEmail(email);
         
         if (exist) {
-            return res.status(400).send("User already exist");
+            return res.status(400).json({message: "User already exist"});
         }
         const hashedPassword = await hash(password, 12);
         const newUser = await createUser(username, email, hashedPassword);
@@ -56,7 +56,7 @@ export const signup = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).send("Internal server error");
+        res.status(500).json({message: "Internal server error"});
     }
 } 
 // Log in into account
@@ -65,7 +65,7 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         if(!email || !password){
-            return res.status(404).send("Email and password are required");
+            return res.status(400).json({message: "Email and password are required"});
         }
 
         const exist = await findUserByEmail(email);
@@ -85,7 +85,7 @@ export const login = async (req, res) => {
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        res.status(302).json({
+        res.status(200).json({
             message: "Login successfully",
             token,
             user: {
@@ -97,7 +97,7 @@ export const login = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).send("Internal server error");
+        res.status(500).json({message: "Internal server error"});
     }
 }
 // Log out
@@ -106,7 +106,7 @@ export const logout = async (req, res) => {
         res.json({ message: "Logout successfully" });
     } catch (err) {
         console.error(err);
-        return res.status(500).send("Internal server error");
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 // Get user info
@@ -118,6 +118,6 @@ export const userInfo = async (req, res) => {
         res.status(200).json({ user: user.rows[0] });
     } catch (err) {
         console.error(err);
-        return res.status(500).send("Internal server error");
+        return res.status(500).json({message: "Internal server error"});
     }
 }

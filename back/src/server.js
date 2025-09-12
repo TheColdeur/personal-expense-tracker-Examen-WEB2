@@ -4,14 +4,16 @@ import dotenv from 'dotenv';
 import authRoutes from "./routes/authRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import receiptRoutes from "./routes/receiptRoutes.js";
-import revenueRoutes from "./routes/revenueRoutes.js";
-import revenueReceiptRoutes from "./routes/revenueReceiptRoutes.js";
+import revenueRoutes from "./routes/incomeRoutes.js";
+import revenueReceiptRoutes from "./routes/incomeReceiptRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+// const PORT = process.env.PORT;
+const PORT = 4000;
+
 
 app.use(cors());
 app.use(json());

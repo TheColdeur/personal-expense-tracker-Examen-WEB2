@@ -7,7 +7,7 @@ export const getUserProfile = async (req, res) => {
         const userId = req.user;
         
         const user = await pool.query(
-            "SELECT id, username, email, created_at, dark_mode FROM users WHERE id = $1", 
+            "SELECT id, username, email, create_at FROM users WHERE id = $1", 
             [userId]
         );
 
@@ -74,7 +74,7 @@ export const updateUserProfile = async (req, res) => {
         }
 
         values.push(userId);
-        const query = `UPDATE users SET ${updates.join(', ')} WHERE id = $${paramCount + 1} RETURNING id, username, email, created_at, dark_mode`;
+        const query = `UPDATE users SET ${updates.join(', ')} WHERE id = $${paramCount + 1} RETURNING id, username, email, create_at`;
         
         const updatedUser = await pool.query(query, values);
 
@@ -129,35 +129,6 @@ export const changePassword = async (req, res) => {
         );
 
         res.status(200).json({ message: "Password changed successfully" });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-};
-export const toggleDarkMode = async (req, res) => {
-    try {
-        const userId = req.user;
-        const { darkMode } = req.body;
-
-        if (typeof darkMode !== 'boolean') {
-            return res.status(400).json({ 
-                message: "Dark mode value must be true or false" 
-            });
-        }
-
-        const updatedUser = await pool.query(
-            "UPDATE users SET dark_mode = $1 WHERE id = $2 RETURNING id, username, email, created_at, dark_mode", 
-            [darkMode, userId]
-        );
-
-        if (updatedUser.rows.length === 0) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        res.status(200).json({
-            message: "Dark mode setting updated successfully",
-            user: updatedUser.rows[0]
-        });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Internal server error" });

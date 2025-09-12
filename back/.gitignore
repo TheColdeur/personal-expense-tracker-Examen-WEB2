@@ -4,3 +4,4 @@ insert.sql
 uploads
 node_modules/
 .env
+server.js
