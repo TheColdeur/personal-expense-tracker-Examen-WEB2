@@ -15,11 +15,11 @@ export default function Dashboard() {
   const [dateFilter, setDateFilter] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/expenses')
+    axios.get('http://localhost:4000/api/expenses')
       .then(res => setExpenses(res.data))
       .catch(err => console.error('Erreur chargement dépenses :', err));
 
-    axios.get('http://localhost:8000/api/categories')
+    axios.get('http://localhost:4000/api/categories')
       .then(res => setCategories(res.data as Category[]))
       .catch(err => console.error('Erreur chargement catégories :', err));
   }, []);
