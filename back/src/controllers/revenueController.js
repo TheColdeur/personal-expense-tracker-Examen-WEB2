@@ -7,53 +7,53 @@ export const getRevenues = async (req, res) => {
         const offset = (page - 1) * limit;
 
         let query = `
-            SELECT r.id, r.amount, r.description, r.date, r.receipt_upload, 
+            SELECT i.id, i.amount, i.description, i.date, i.receipt_upload, 
                    c.name as category_name, c.id as category_id
-            FROM revenues r 
-            JOIN categories c ON r.categoryId = c.id 
-            WHERE r.userId = $1
+            FROM incomes i 
+            LEFT JOIN categories c ON i.categoryId = c.id 
+            WHERE i.userId = $1
         `;
         let params = [userId];
         let paramCount = 1;
 
         if (startDate) {
             paramCount++;
-            query += ` AND r.date >= $${paramCount}`;
+            query += ` AND i.date >= $${paramCount}`;
             params.push(startDate);
         }
         if (endDate) {
             paramCount++;
-            query += ` AND r.date <= $${paramCount}`;
+            query += ` AND i.date <= $${paramCount}`;
             params.push(endDate);
         }
         if (categoryId) {
             paramCount++;
-            query += ` AND r.categoryId = $${paramCount}`;
+            query += ` AND i.categoryId = $${paramCount}`;
             params.push(categoryId);
         }
 
-        query += ` ORDER BY r.date DESC, r.id DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
+        query += ` ORDER BY i.date DESC, i.id DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
         params.push(limit, offset);
 
         const revenues = await pool.query(query, params);
         
-        let countQuery = "SELECT COUNT(*) FROM revenues r WHERE r.userId = $1";
+        let countQuery = "SELECT COUNT(*) FROM incomes i WHERE i.userId = $1";
         let countParams = [userId];
         let countParamCount = 1;
 
         if (startDate) {
             countParamCount++;
-            countQuery += ` AND r.date >= $${countParamCount}`;
+            countQuery += ` AND i.date >= $${countParamCount}`;
             countParams.push(startDate);
         }
         if (endDate) {
             countParamCount++;
-            countQuery += ` AND r.date <= $${countParamCount}`;
+            countQuery += ` AND i.date <= $${countParamCount}`;
             countParams.push(endDate);
         }
         if (categoryId) {
             countParamCount++;
-            countQuery += ` AND r.categoryId = $${countParamCount}`;
+            countQuery += ` AND i.categoryId = $${countParamCount}`;
             countParams.push(categoryId);
         }
 
@@ -80,11 +80,11 @@ export const getRevenueById = async (req, res) => {
         const revenueId = req.params.id;
 
         const revenue = await pool.query(`
-            SELECT r.id, r.amount, r.description, r.date, r.receipt_upload, 
+            SELECT i.id, i.amount, i.description, i.date, i.receipt_upload, i.source,
                    c.name as category_name, c.id as category_id
-            FROM revenues r 
-            JOIN categories c ON r.categoryId = c.id 
-            WHERE r.id = $1 AND r.userId = $2
+            FROM incomes i 
+            LEFT JOIN categories c ON i.categoryId = c.id 
+            WHERE i.id = $1 AND i.userId = $2
         `, [revenueId, userId]);
 
         if (revenue.rows.length === 0) {
@@ -101,11 +101,11 @@ export const getRevenueById = async (req, res) => {
 export const createRevenue = async (req, res) => {
     try {
         const userId = req.user;
-        const { amount, description, date, categoryId } = req.body;
+        const { amount, description, date, source, categoryId } = req.body;
 
-        if (!amount || !description || !date || !categoryId) {
+        if (!amount || !date || !source) {
             return res.status(400).json({ 
-                message: "Amount, description, date, and category are required" 
+                message: "Amount, date, and source are required" 
             });
         }
 
@@ -115,30 +115,33 @@ export const createRevenue = async (req, res) => {
             });
         }
 
-        const categoryCheck = await pool.query(`
-            SELECT c.id FROM categories c 
-            JOIN user_category uc ON uc.categoryId = c.id 
-            WHERE uc.userId = $1 AND c.id = $2
-        `, [userId, categoryId]);
+        // Vérifier la catégorie si fournie
+        if (categoryId) {
+            const categoryCheck = await pool.query(`
+                SELECT c.id FROM categories c 
+                LEFT JOIN user_category uc ON uc.categoryId = c.id 
+                WHERE (uc.userId = $1 OR c.is_default = true) AND c.id = $2
+            `, [userId, categoryId]);
 
-        if (categoryCheck.rows.length === 0) {
-            return res.status(400).json({ 
-                message: "Category not found or access denied" 
-            });
+            if (categoryCheck.rows.length === 0) {
+                return res.status(400).json({ 
+                    message: "Category not found or access denied" 
+                });
+            }
         }
 
         const newRevenue = await pool.query(`
-            INSERT INTO revenues (userId, amount, description, date, categoryId) 
-            VALUES ($1, $2, $3, $4, $5) 
-            RETURNING id, amount, description, date, categoryId
-        `, [userId, amount, description, date, categoryId]);
+            INSERT INTO incomes (userId, amount, description, date, source, categoryId) 
+            VALUES ($1, $2, $3, $4, $5, $6) 
+            RETURNING id, amount, description, date, source, categoryId
+        `, [userId, amount, description || '', date, source, categoryId || null]);
 
         const revenueWithCategory = await pool.query(`
-            SELECT r.id, r.amount, r.description, r.date, r.receipt_upload,
+            SELECT i.id, i.amount, i.description, i.date, i.receipt_upload, i.source,
                    c.name as category_name, c.id as category_id
-            FROM revenues r 
-            JOIN categories c ON r.categoryId = c.id 
-            WHERE r.id = $1
+            FROM incomes i 
+            LEFT JOIN categories c ON i.categoryId = c.id 
+            WHERE i.id = $1
         `, [newRevenue.rows[0].id]);
 
         res.status(201).json({
@@ -155,10 +158,10 @@ export const updateRevenue = async (req, res) => {
     try {
         const userId = req.user;
         const revenueId = req.params.id;
-        const { amount, description, date, categoryId } = req.body;
+        const { amount, description, date, source, categoryId } = req.body;
 
         const revenueCheck = await pool.query(
-            "SELECT * FROM revenues WHERE id = $1 AND userId = $2",
+            "SELECT * FROM incomes WHERE id = $1 AND userId = $2",
             [revenueId, userId]
         );
 
@@ -177,8 +180,8 @@ export const updateRevenue = async (req, res) => {
         if (categoryId) {
             const categoryCheck = await pool.query(`
                 SELECT c.id FROM categories c 
-                JOIN user_category uc ON uc.categoryId = c.id 
-                WHERE uc.userId = $1 AND c.id = $2
+                LEFT JOIN user_category uc ON uc.categoryId = c.id 
+                WHERE (uc.userId = $1 OR c.is_default = true) AND c.id = $2
             `, [userId, categoryId]);
 
             if (categoryCheck.rows.length === 0) {
@@ -207,6 +210,11 @@ export const updateRevenue = async (req, res) => {
             updates.push(`date = $${paramCount}`);
             values.push(date);
         }
+        if (source !== undefined) {
+            paramCount++;
+            updates.push(`source = $${paramCount}`);
+            values.push(source);
+        }
         if (categoryId !== undefined) {
             paramCount++;
             updates.push(`categoryId = $${paramCount}`);
@@ -220,16 +228,16 @@ export const updateRevenue = async (req, res) => {
         }
 
         values.push(revenueId);
-        const query = `UPDATE revenues SET ${updates.join(', ')} WHERE id = $${paramCount + 1} RETURNING *`;
+        const query = `UPDATE incomes SET ${updates.join(', ')} WHERE id = $${paramCount + 1} RETURNING *`;
         
         const updatedRevenue = await pool.query(query, values);
 
         const revenueWithCategory = await pool.query(`
-            SELECT r.id, r.amount, r.description, r.date, r.receipt_upload,
+            SELECT i.id, i.amount, i.description, i.date, i.receipt_upload, i.source,
                    c.name as category_name, c.id as category_id
-            FROM revenues r 
-            JOIN categories c ON r.categoryId = c.id 
-            WHERE r.id = $1
+            FROM incomes i 
+            LEFT JOIN categories c ON i.categoryId = c.id 
+            WHERE i.id = $1
         `, [revenueId]);
 
         res.status(200).json({
@@ -248,7 +256,7 @@ export const deleteRevenue = async (req, res) => {
         const revenueId = req.params.id;
 
         const revenue = await pool.query(
-            "SELECT * FROM revenues WHERE id = $1 AND userId = $2",
+            "SELECT * FROM incomes WHERE id = $1 AND userId = $2",
             [revenueId, userId]
         );
 
@@ -258,7 +266,7 @@ export const deleteRevenue = async (req, res) => {
             });
         }
 
-        await pool.query("DELETE FROM revenues WHERE id = $1", [revenueId]);
+        await pool.query("DELETE FROM incomes WHERE id = $1", [revenueId]);
 
         res.status(200).json({ message: "Revenue deleted successfully" });
     } catch (err) {
@@ -278,29 +286,30 @@ export const getRevenueStats = async (req, res) => {
 
         if (startDate) {
             paramCount++;
-            dateFilter += ` AND r.date >= $${paramCount}`;
+            dateFilter += ` AND i.date >= $${paramCount}`;
             params.push(startDate);
         }
         if (endDate) {
             paramCount++;
-            dateFilter += ` AND r.date <= $${paramCount}`;
+            dateFilter += ` AND i.date <= $${paramCount}`;
             params.push(endDate);
         }
 
         const totalQuery = `
             SELECT COALESCE(SUM(amount), 0) as total 
-            FROM revenues r 
+            FROM incomes i 
             WHERE userId = $1 ${dateFilter}
         `;
         const totalResult = await pool.query(totalQuery, params);
 
         const categoryQuery = `
-            SELECT c.name, c.id, COALESCE(SUM(r.amount), 0) as total
+            SELECT c.name, c.id, COALESCE(SUM(i.amount), 0) as total
             FROM categories c
-            JOIN user_category uc ON uc.categoryId = c.id
-            LEFT JOIN revenues r ON r.categoryId = c.id AND r.userId = $1 ${dateFilter}
-            WHERE uc.userId = $1
+            LEFT JOIN user_category uc ON uc.categoryId = c.id
+            LEFT JOIN incomes i ON i.categoryId = c.id AND i.userId = $1 ${dateFilter}
+            WHERE uc.userId = $1 OR c.is_default = true
             GROUP BY c.id, c.name
+            HAVING COALESCE(SUM(i.amount), 0) > 0
             ORDER BY total DESC
         `;
         const categoryResult = await pool.query(categoryQuery, params);
@@ -308,22 +317,22 @@ export const getRevenueStats = async (req, res) => {
         let timeGroupBy;
         switch (period) {
             case 'day':
-                timeGroupBy = "DATE(r.date)";
+                timeGroupBy = "DATE(i.date)";
                 break;
             case 'week':
-                timeGroupBy = "DATE_TRUNC('week', r.date)";
+                timeGroupBy = "DATE_TRUNC('week', i.date)";
                 break;
             case 'year':
-                timeGroupBy = "DATE_TRUNC('year', r.date)";
+                timeGroupBy = "DATE_TRUNC('year', i.date)";
                 break;
             default:
-                timeGroupBy = "DATE_TRUNC('month', r.date)";
+                timeGroupBy = "DATE_TRUNC('month', i.date)";
         }
 
         const timeQuery = `
-            SELECT ${timeGroupBy} as period, SUM(r.amount) as total
-            FROM revenues r
-            WHERE r.userId = $1 ${dateFilter}
+            SELECT ${timeGroupBy} as period, SUM(i.amount) as total
+            FROM incomes i
+            WHERE i.userId = $1 ${dateFilter}
             GROUP BY ${timeGroupBy}
             ORDER BY period ASC
         `;
