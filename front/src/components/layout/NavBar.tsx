@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { FiBell, FiUser } from 'react-icons/fi';
 import { BsSun, BsMoon } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import './layout.css';
 import cashflowLogo from '../../assets/Cashflow-Logo.png';
 
 const Navbar = () => {
@@ -24,37 +23,50 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-yellow-400 dark:bg-black h-[100px] text-black dark:text-yellow-400 px-6 py-4 shadow-md relative z-50 font-poppins flex items-center justify-between animate-fade-in">
+    <header className="fixed top-0 left-0 w-full h-[80px] bg-yellow-400 dark:bg-black text-black dark:text-yellow-400 px-6 shadow-md z-50 font-poppins flex items-center justify-between backdrop-blur-md transition-all duration-300">
       {/* Logo */}
       <Link to="/dashboard" className="flex items-center gap-2 group">
         <img
           src={cashflowLogo}
           alt="CashFlow Logo"
-          className="w-52 h-48 transition-transform duration-300 group-hover:scale-110"
+          className="w-32 h-auto transition-transform duration-300 group-hover:scale-105"
         />
+        <span className="text-xl font-bold tracking-wide group-hover:underline">CashFlow</span>
       </Link>
 
       {/* Actions */}
       <div className="flex items-center gap-6">
-        <button className="relative group">
-          <FiBell size={20} className="transition-transform duration-300 group-hover:scale-125" />
-          <span className="absolute -top-1 -right-2 bg-black dark:bg-yellow-400 text-yellow-400 dark:text-black text-xs px-1 rounded-full">3</span>
+        {/* Notifications */}
+        <button
+          aria-label="Notifications"
+          className="relative group p-2 rounded-full hover:bg-black hover:text-yellow-400 transition"
+        >
+          <FiBell size={22} className="group-hover:scale-110 transition-transform duration-300" />
+          <span className="absolute -top-1 -right-2 bg-black dark:bg-yellow-400 text-yellow-400 dark:text-black text-xs px-1 rounded-full animate-pulse">
+            3
+          </span>
         </button>
 
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-full hover:bg-black hover:text-yellow-400 transition ease-in"
+          aria-label="Toggle Theme"
+          className="p-2 rounded-full hover:bg-black hover:text-yellow-400 transition"
         >
           {theme === 'light' ? (
-            <BsMoon size={25} className="text-black " />
+            <BsMoon size={22} />
           ) : (
-            <BsSun size={25} className="text-black" />
+            <BsSun size={22} />
           )}
         </button>
 
-        <Link to="/profile" className="flex items-center gap-2 group hover:bg-black rounded-3xl hover:text-yellow-400 transition ease-in p-3">
-          <FiUser size={25} className="transition-transform duration-300 group-hover:scale-110" />
+        {/* Profile */}
+        <Link
+          to="/profile"
+          className="flex items-center gap-2 group p-2 rounded-full hover:bg-black hover:text-yellow-400 transition"
+        >
+          <FiUser size={22} className="group-hover:scale-110 transition-transform duration-300" />
+          <span className="hidden md:inline text-sm font-medium">Profil</span>
         </Link>
       </div>
     </header>
