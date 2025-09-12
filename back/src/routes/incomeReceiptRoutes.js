@@ -4,7 +4,7 @@ import {
     uploadRevenueReceipt, 
     downloadRevenueReceipt, 
     deleteRevenueReceipt 
-} from "../controllers/revenueReceiptController.js";
+} from "../controllers/incomeReceiptController.js";
 import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();

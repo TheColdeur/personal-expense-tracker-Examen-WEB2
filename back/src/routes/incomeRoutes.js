@@ -7,7 +7,7 @@ import {
     getRevenueById,
     updateRevenue,
     getRevenueStats
-} from "../controllers/revenueController.js";
+} from "../controllers/incomeController.js";
 
 const router = express.Router();
 
