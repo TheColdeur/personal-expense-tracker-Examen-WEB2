@@ -6,6 +6,7 @@ import receiptRoutes from "./routes/receiptRoutes.js";
 import revenueRoutes from "./routes/incomeRoutes.js";
 import revenueReceiptRoutes from "./routes/incomeReceiptRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import { Pool } from 'pg';
 
 dotenv.config();
 
