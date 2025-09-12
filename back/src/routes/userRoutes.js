@@ -4,7 +4,6 @@ import {
     getUserProfile,
     updateUserProfile,
     changePassword,
-    toggleDarkMode,
     deleteUserAccount
 } from "../controllers/userController.js";
 
