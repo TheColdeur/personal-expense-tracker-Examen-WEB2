@@ -1,8 +1,11 @@
 import express, { json } from "express";
 import cors from "cors";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import summaryRoutes from "./routes/summaryRoutes.js";
 import dotenv from 'dotenv';
 import authRoutes from "./routes/authRoutes.js";
 import receiptRoutes from "./routes/receiptRoutes.js";
+import multer from 'multer';
 import revenueRoutes from "./routes/incomeRoutes.js";
 import revenueReceiptRoutes from "./routes/incomeReceiptRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
