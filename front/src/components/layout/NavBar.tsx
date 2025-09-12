@@ -63,7 +63,7 @@ const Navbar = () => {
         {/* Profile */}
         <Link
           to="/profile"
-          className="flex items-center gap-2 group p-2 rounded-full hover:bg-black hover:text-yellow-400 transition"
+          className="flex items-center gap-2 group p-3 rounded-2xl hover:bg-black hover:text-yellow-400 transition"
         >
           <FiUser size={22} className="group-hover:scale-110 transition-transform duration-300" />
           <span className="hidden md:inline text-sm font-medium">Profil</span>
