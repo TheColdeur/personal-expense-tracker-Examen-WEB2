@@ -1,46 +1,65 @@
 import express, { json } from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import multer from "multer";
+import { Pool } from "pg";
+
+// Routes
 import categoryRoutes from "./routes/categoryRoutes.js";
 import summaryRoutes from "./routes/summaryRoutes.js";
-import dotenv from 'dotenv';
 import authRoutes from "./routes/authRoutes.js";
 import receiptRoutes from "./routes/receiptRoutes.js";
-import multer from 'multer';
-import revenueRoutes from "./routes/incomeRoutes.js";
-import revenueReceiptRoutes from "./routes/incomeReceiptRoutes.js";
+import incomeRoutes from "./routes/incomeRoutes.js"; // <-- renommé pour plus de clarté
+import incomeReceiptRoutes from "./routes/incomeReceiptRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import { Pool } from 'pg';
 
 dotenv.config();
 
 const app = express();
 const PORT = 4000;
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
+/* -------------------- DATABASE -------------------- */
 const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'cashflow',
-  password: process.env.DB_PASSWORD || 'Novah Anusha',
+  user: process.env.DB_USER || "postgres",
+  host: process.env.DB_HOST || "localhost",
+  database: process.env.DB_NAME || "cashflow",
+  password: process.env.DB_PASSWORD || "Novah Anusha",
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
 });
 
-app.use(cors());
+/* -------------------- MIDDLEWARE -------------------- */
+app.use(
+  cors({
+    origin: "http://localhost:3000", // ton frontend React
+    credentials: true,
+  })
+);
 app.use(json());
 
-app.use('/api/categories', categoryRoutes);
+/* -------------------- ROUTES -------------------- */
+app.use("/api/categories", categoryRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/receipts", receiptRoutes);
+app.use("/api/revenues", incomeRoutes); // <-- on garde uniquement CE fichier
+app.use("/api/revenue-receipts", incomeReceiptRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/summary", summaryRoutes);
 
-app.get('/api/expenses', async (req, res) => {
+/* -------------------- EXPENSES -------------------- */
+app.get("/api/expenses", async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM expenses ORDER BY created_at DESC');
+    const result = await pool.query(
+      "SELECT * FROM expenses ORDER BY created_at DESC"
+    );
     res.json(result.rows);
   } catch (err) {
-    console.error('Erreur GET /expenses:', err);
-    res.status(500).json({ error: 'Erreur serveur' });
+    console.error("Erreur GET /expenses:", err);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
-app.post('/api/expenses', upload.single('receipt'), async (req, res) => {
+app.post("/api/expenses", upload.single("receipt"), async (req, res) => {
   try {
     const {
       title,
@@ -50,7 +69,7 @@ app.post('/api/expenses', upload.single('receipt'), async (req, res) => {
       date,
       start_date,
       end_date,
-      description
+      description,
     } = req.body;
 
     const receipt = req.file?.filename || null;
@@ -69,55 +88,36 @@ app.post('/api/expenses', upload.single('receipt'), async (req, res) => {
       start_date || null,
       end_date || null,
       description,
-      receipt
+      receipt,
     ];
 
     const result = await pool.query(query, values);
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error('Erreur POST /expenses:', err);
-    res.status(500).json({ error: 'Erreur serveur' });
+    console.error("Erreur POST /expenses:", err);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
-app.delete('/api/expenses/:id', async (req, res) => {
+app.delete("/api/expenses/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await pool.query('DELETE FROM expenses WHERE id = $1', [id]);
+    await pool.query("DELETE FROM expenses WHERE id = $1", [id]);
     res.status(204).send();
   } catch (err) {
-    console.error('Erreur DELETE /expenses/:id', err);
-    res.status(500).json({ error: 'Erreur serveur' });
+    console.error("Erreur DELETE /expenses/:id", err);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
-app.post('/api/revenues', async (req, res) => {
-  try {
-    const { source, amount, date } = req.body;
-
-    const query = `
-      INSERT INTO revenues (source, amount, date)
-      VALUES ($1, $2, $3)
-      RETURNING *
-    `;
-    const values = [source, amount, date];
-
-    const result = await pool.query(query, values);
-    res.status(201).json({ revenue: result.rows[0] });
-  } catch (err) {
-    console.error('Erreur POST /revenues:', err);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
+/* -------------------- DEBUG MIDDLEWARE -------------------- */
+app.use("/api/revenues", (req, res, next) => {
+  console.log("👉 Requête reçue sur /api/revenues");
+  console.log("Headers:", req.headers);
+  next();
 });
 
-
-app.use("/api/auth", authRoutes);
-app.use("/api/receipts", receiptRoutes);
-app.use("/api/revenues", revenueRoutes);
-app.use("/api/revenue-receipts", revenueReceiptRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/summary", summaryRoutes);
-
+/* -------------------- SERVER -------------------- */
 app.listen(PORT, () => {
-    console.log(`Server started at : http://localhost:${PORT}`);
+  console.log(`✅ Server started at: http://localhost:${PORT}`);
 });
