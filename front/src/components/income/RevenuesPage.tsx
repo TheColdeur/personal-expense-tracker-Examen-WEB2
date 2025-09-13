@@ -59,7 +59,7 @@ export default function RevenuesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 p-6 transition-all duration-500">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 p-6 mt-14 transition-all duration-500">
       <div className="flex flex-col lg:flex-row gap-8 animate-fade-in-up">
         {/* Liste des revenus */}
         <div className="flex-1 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
