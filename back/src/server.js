@@ -31,7 +31,7 @@ const pool = new Pool({
 /* -------------------- MIDDLEWARE -------------------- */
 app.use(
   cors({
-    origin: "http://localhost:3000", // ton frontend React
+    origin: "http://localhost:5173", // ton frontend React
     credentials: true,
   })
 );
