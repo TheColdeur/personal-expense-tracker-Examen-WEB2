@@ -6,7 +6,7 @@ import {
   changePassword,
   deleteUserAccount,
 } from "./userSettingService";
-import { UserProfile } from "./types";
+import type { UserProfile } from "./types";
 
 
 const UserSetting: React.FC = () => {

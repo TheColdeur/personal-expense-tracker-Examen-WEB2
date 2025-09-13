@@ -1,6 +1,6 @@
 // front/src/components/userSetting/userSettingService.ts
 import axios from "axios";
-import { UserProfile } from "./types";
+import type { UserProfile } from "./types";
 
 
 
