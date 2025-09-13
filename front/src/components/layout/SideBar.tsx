@@ -1,21 +1,19 @@
-// components/Sidebar.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiGrid, FiDollarSign, FiFileText, FiUser, FiMenu } from 'react-icons/fi';
+import { FiGrid, FiDollarSign, FiFile, FiUser, FiMenu } from 'react-icons/fi';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: <FiGrid /> },
   { to: '/expenses', label: 'Expenses', icon: <FiDollarSign /> },
-  { to: '/receipts', label: 'Receipts', icon: <FiFileText /> },
+  { to: '/revenues', label: 'Revenus', icon: <FiFile /> },
   { to: '/profile', label: 'Profil', icon: <FiUser /> },
 ];
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const [open, setOpen] = useState(true);
 
   return (
     <>
-      {/* Toggle button for mobile */}
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden fixed top-4 left-4 z-50 bg-yellow-400 text-black p-2 rounded-full shadow-lg"
@@ -23,11 +21,10 @@ const Sidebar = () => {
         <FiMenu size={20} />
       </button>
 
-      {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-[500px] mt-32 ml-5 rounded-xl w-64 items-center bg-black text-white p-6 font-inter shadow-xl transform transition-transform duration-500 ease-in-out z-40 ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 h-full w-64 bg-black text-white p-6 font-inter shadow-xl rounded-xl transform transition-transform duration-500 ease-in-out z-40
+          ${open ? 'translate-x-0' : '-translate-x-full'}
+        `}
       >
         <nav className="space-y-4 mt-10">
           {navItems.map(({ to, label, icon }) => (
@@ -45,10 +42,7 @@ const Sidebar = () => {
               <span className="text-xl transition-transform duration-300 group-hover:scale-110">
                 {icon}
               </span>
-              <span className="relative text-base tracking-wide">
-                {label}
-                <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
-              </span>
+              <span className="relative text-base tracking-wide">{label}</span>
             </NavLink>
           ))}
         </nav>
@@ -57,6 +51,13 @@ const Sidebar = () => {
           © 2025 CashFlow. All rights reserved.
         </footer>
       </aside>
+
+      {open && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-30"
+          onClick={() => setOpen(false)}
+        />
+      )}
     </>
   );
 };
