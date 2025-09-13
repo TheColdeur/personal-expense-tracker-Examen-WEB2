@@ -91,6 +91,26 @@ app.delete('/api/expenses/:id', async (req, res) => {
   }
 });
 
+app.post('/api/revenues', async (req, res) => {
+  try {
+    const { source, amount, date } = req.body;
+
+    const query = `
+      INSERT INTO revenues (source, amount, date)
+      VALUES ($1, $2, $3)
+      RETURNING *
+    `;
+    const values = [source, amount, date];
+
+    const result = await pool.query(query, values);
+    res.status(201).json({ revenue: result.rows[0] });
+  } catch (err) {
+    console.error('Erreur POST /revenues:', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/revenues", revenueRoutes);
