@@ -69,7 +69,7 @@ export default function PieChart() {
 
   const options = {
     responsive: true,
-    cutout: '70%', // ✅ centre vide
+    cutout: '70%',
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -103,7 +103,6 @@ export default function PieChart() {
 
   return (
     <div className="max-w-6xl mx-auto mt-0 px-4 md:px-8">
-  {/* Header */}
   <div className="flex flex-col md:flex-row items-center justify-between mb-10">
     <div>
       <h1 className="text-4xl font-bold text-yellow-500 dark:text-yellow-400 tracking-tight">
@@ -120,16 +119,12 @@ export default function PieChart() {
       ← Retour au tableau de bord
     </Link>
   </div>
-
-  {/* Résumé */}
   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
     <SummaryCard label="Total des dépenses" value={`${total.toLocaleString('fr-FR')} Ar`} />
     <SummaryCard label="Transactions" value={expenses.length.toString()} />
     <SummaryCard label="Catégorie dominante" value={labels[values.indexOf(Math.max(...values))] || '—'} />
     <SummaryCard label="Mis à jour le" value={new Date().toLocaleDateString('fr-FR')} />
   </div>
-
-  {/* Donut Chart */}
   <div className="bg-gradient-to-br from-white via-yellow-50 to-white dark:from-black dark:via-yellow-950 dark:to-black p-6 rounded-3xl shadow-xl border border-yellow-200 dark:border-yellow-500 transition-all duration-300">
     <div className="relative max-w-sm mx-auto">
       <Pie data={data} options={options} />
@@ -140,8 +135,6 @@ export default function PieChart() {
       </div>
     </div>
   </div>
-
-  {/* Légende */}
   <div className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
     Chaque segment représente une catégorie. Survolez pour voir les détails.
   </div>
