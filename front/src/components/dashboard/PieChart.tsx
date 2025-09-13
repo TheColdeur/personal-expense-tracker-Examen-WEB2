@@ -102,7 +102,7 @@ export default function PieChart() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto mt-0 px-4 md:px-8">
+    <div className="max-w-6xl mx-auto mt-20 px-4 md:px-8">
   <div className="flex flex-col md:flex-row items-center justify-between mb-10">
     <div>
       <h1 className="text-4xl font-bold text-yellow-500 dark:text-yellow-400 tracking-tight">

@@ -7,6 +7,8 @@ import ExpensesPage from './components/expenses/ExpensesPages';
 import DashboardPage from './components/dashboard/DashBoard';
 import UserSetting from './components/userSetting/UserSetting';
 import ExpensesFormPage from './components/expenses/ExpenseFormPage';
+import PieChart from './components/dashboard/PieChart';
+import BarChart from './components/dashboard/BarChar';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +23,8 @@ const App: React.FC = () => {
           <Route path="/revenues" element={<RevenuesPage />} />
           <Route path="/expenses" element={<ExpensesPage />} />
           <Route path="/profile" element={<UserSetting />} />
+          <Route path="/piechart" element={<PieChart />} />
+          <Route path="/barchart" element={<BarChart />} />
         </Routes>
       </div>
     </div>
