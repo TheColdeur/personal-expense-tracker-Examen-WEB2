@@ -14,7 +14,6 @@ import { Pool } from 'pg';
 dotenv.config();
 
 const app = express();
-// const PORT = process.env.PORT;
 const PORT = 4000;
 const upload = multer({ dest: 'uploads/' });
 
@@ -22,17 +21,15 @@ const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
   host: process.env.DB_HOST || 'localhost',
   database: process.env.DB_NAME || 'cashflow',
-  password: process.env.DB_PASSWORD || 'Novah Anusha', // ← à sécuriser dans .env
+  password: process.env.DB_PASSWORD || 'Novah Anusha',
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
 });
 
 app.use(cors());
 app.use(json());
 
-// 🔗 Routes
 app.use('/api/categories', categoryRoutes);
 
-// 📥 GET dépenses
 app.get('/api/expenses', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM expenses ORDER BY created_at DESC');
@@ -43,7 +40,6 @@ app.get('/api/expenses', async (req, res) => {
   }
 });
 
-// 📝 POST dépense
 app.post('/api/expenses', upload.single('receipt'), async (req, res) => {
   try {
     const {
@@ -84,7 +80,6 @@ app.post('/api/expenses', upload.single('receipt'), async (req, res) => {
   }
 });
 
-// 🗑️ DELETE dépense
 app.delete('/api/expenses/:id', async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,5 +1,3 @@
-// routes/categoryRoutes.js
-
 import express from 'express';
 import { Pool } from 'pg';
 
@@ -13,7 +11,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-// GET all categories
 router.get('/', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM categories ORDER BY name');
@@ -24,7 +21,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST new category
 router.post('/', async (req, res) => {
   try {
     const { name } = req.body;
@@ -39,7 +35,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update category
 router.put('/:id', async (req, res) => {
   try {
     const { name } = req.body;
@@ -55,7 +50,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE category
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;

@@ -20,9 +20,9 @@ export default function CategoryManager({ onClose }: Props) {
   const handleClose = () => {
   setIsClosing(true);
   setTimeout(() => {
-    onClose(); // retire le composant après l’animation
-    setIsClosing(false); // reset pour la prochaine ouverture
-  }, 300); // durée de l’animation
+    onClose();
+    setIsClosing(false);
+  }, 300);
 };
 
   useEffect(() => {
