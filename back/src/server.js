@@ -36,6 +36,7 @@ app.use(
   })
 );
 app.use(json());
+app.use(cors());
 
 /* -------------------- ROUTES -------------------- */
 app.use("/api/categories", categoryRoutes);
