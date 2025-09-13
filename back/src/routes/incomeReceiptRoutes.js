@@ -1,5 +1,4 @@
 import express from "express";
-import { authentication } from "../middlewares/authentication.js";
 import { 
     uploadIncomeReceipt, 
     downloadIncomeReceipt, 
@@ -9,10 +8,10 @@ import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
-router.post("/:idRevenue/upload", authentication, upload.single('receipt'), uploadIncomeReceipt);
+router.post("/:idRevenue/upload", upload.single('receipt'), uploadIncomeReceipt);
 
-router.get("/:idRevenue/download", authentication, downloadIncomeReceipt);
+router.get("/:idRevenue/download", downloadIncomeReceipt);
 
-router.delete("/:idRevenue/receipt", authentication, deleteIncomeReceipt);
+router.delete("/:idRevenue/receipt", deleteIncomeReceipt);
 
 export default router;

@@ -1,10 +1,9 @@
 import express from "express";
-import { authentication } from "../middlewares/authentication.js";
 import { checkBudget } from "../utils/budgetMonitor.js";
 
 const router = express.Router();
 
-router.get("/monthly", authentication, async (req, res) => {
+router.get("/monthly", async (req, res) => {
   try {
     const { month } = req.query;
     const currentDate = month ? new Date(month) : new Date();
@@ -19,7 +18,7 @@ router.get("/monthly", authentication, async (req, res) => {
   }
 });
 
-router.get("/alerts", authentication, async (req, res) => {
+router.get("/alerts", async (req, res) => {
   try {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;

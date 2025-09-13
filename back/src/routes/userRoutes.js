@@ -1,5 +1,4 @@
 import express from "express";
-import { authentication } from "../middlewares/authentication.js";
 import {
     getUserProfile,
     updateUserProfile,
@@ -9,12 +8,12 @@ import {
 
 const router = express.Router();
 
-router.get("/profile", authentication, getUserProfile);
+router.get("/profile", getUserProfile);
 
-router.put("/profile", authentication, updateUserProfile);
+router.put("/profile", updateUserProfile);
 
-router.put("/change-password", authentication, changePassword);
+router.put("/change-password", changePassword);
 
-router.delete("/account", authentication, deleteUserAccount);
+router.delete("/account", deleteUserAccount);
 
 export default router;
