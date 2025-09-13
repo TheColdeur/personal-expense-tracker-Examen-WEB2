@@ -47,7 +47,7 @@ export default function ExpensesPage() {
   const fondOpacity = total > 1000000 ? 'opacity-50' : 'opacity-70';
 
   return (
-    <div className="relative min-h-screen bg-white px-6 py-0 overflow-hidden z-10">
+    <div className="relative min-h-screen bg-white px-6 pt-32 overflow-hidden z-10">
       {/* Fond SVG */}
       <div className={`absolute inset-0 z-0 pointer-events-none ${fondOpacity}`}>
         <div className="absolute inset-0 flex items-center justify-center backdrop-blur-md">

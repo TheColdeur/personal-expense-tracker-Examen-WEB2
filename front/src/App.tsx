@@ -6,6 +6,7 @@ import Navbar from './components/layout/NavBar';
 import ExpensesPage from './components/expenses/ExpensesPages';
 import DashboardPage from './components/dashboard/DashBoard';
 import UserSetting from './components/userSetting/UserSetting';
+import ExpensesFormPage from './components/expenses/ExpenseFormPage';
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
       <div className="flex-1 p-6 ml-0 md:ml-64">
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/ajouter" element={<ExpensesFormPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/revenues" element={<RevenuesPage />} />
           <Route path="/expenses" element={<ExpensesPage />} />
